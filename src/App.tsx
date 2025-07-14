@@ -1,17 +1,22 @@
-
-import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from './features/auth/components/Login';
+import Register from './features/auth/components/Register';
+// import Dashboard from '@/pages/Dashboard'; // future
+import { Toaster } from 'react-hot-toast';
 
 function App() {
-
   return (
-    <>
-     <div>
-       <h1 className="text-3xl font-bold underline text-blue-600">
-        Hello Tailwind!
-      </h1>
-     </div>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        {/* Future: <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
+      </Routes>
+      <Toaster position="top-right" reverseOrder={false} />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

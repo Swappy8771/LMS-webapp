@@ -2,8 +2,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // Set this in .env
-  withCredentials: false,
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Reads from .env
+  withCredentials: false, // Set to true only if using cookies or CORS credentials
 });
 
 axiosInstance.interceptors.request.use((config) => {
