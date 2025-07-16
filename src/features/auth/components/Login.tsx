@@ -22,13 +22,23 @@ const Login = () => {
       return toast.error('All fields required');
     }
 
-    const resultAction = await dispatch(loginUser(formData));
-    if (loginUser.fulfilled.match(resultAction)) {
-      toast.success('Login successful');
-      navigate('/dashboard');
-    } else {
-      toast.error(resultAction.payload as string);
-    }
+  const resultAction = await dispatch(loginUser(formData));
+
+if (loginUser.fulfilled.match(resultAction)) {
+  toast.success('Login successful');
+
+  const user = resultAction.payload;
+
+  if (user?.role === 'admin') {
+    navigate('/admin/dashboard');
+  } else if (user?.role === 'instructor') {
+    navigate('/instructor/dashboard');
+  } else {
+    navigate('/student/dashboard'); // default fallback
+  }
+} else {
+  toast.error(resultAction.payload as string);
+}
   };
 
   return (
@@ -39,7 +49,7 @@ const Login = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Hey yo, 👋</h1>
             <h2 className="text-xl font-semibold text-gray-600">Welcome back!</h2>
-            <p className="text-sm text-gray-500 mt-2">Login to start working with your tasks</p>
+            <p className="text-sm text-gray-500 mt-2">Login to Best LMS Platform</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

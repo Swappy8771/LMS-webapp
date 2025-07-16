@@ -6,10 +6,10 @@ const slides = [
     image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1000&q=80',
     text: 'A place to connect your team.\nCommunicate faster and easier.',
   },
-  {
-    image: 'https://images.unsplash.com/photo-1581090700227-1e8c1a4cfb66?auto=format&fit=crop&w=1000&q=80',
-    text: 'Collaborate seamlessly across departments.',
-  },
+  // {
+  //   image: 'https://images.unsplash.com/photo-1581090700227-1e8c1a4cfb66?auto=format&fit=crop&w=1000&q=80',
+  //   text: 'Collaborate seamlessly across departments.',
+  // },
   {
     image: 'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&w=1000&q=80',
     text: 'Empower your learning with intelligent tools.',

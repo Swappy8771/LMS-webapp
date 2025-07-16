@@ -4,13 +4,19 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { registerUser } from '../authSlice';
 import toast from 'react-hot-toast';
 import AuthSlider from './AuthSlider';
+import type { UserRole } from '../authTypes';
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading } = useAppSelector((state) => state.auth);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    password: string;
+    role: UserRole;
+  }>({
     name: '',
     email: '',
     password: '',
@@ -20,7 +26,11 @@ const Register = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'role' ? (value as UserRole) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
