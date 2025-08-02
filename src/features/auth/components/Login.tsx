@@ -1,5 +1,5 @@
 // src/pages/Login.tsx
-import { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { loginUser } from '../authSlice';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,34 +11,40 @@ const Login = () => {
   const navigate = useNavigate();
   const { loading } = useAppSelector((state) => state.auth);
 
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const initialValues = {
+    email: '',
+    password: '',
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password) {
-      return toast.error('All fields required');
+  const validate = (values: typeof initialValues) => {
+    const errors: Partial<typeof initialValues> = {};
+    if (!values.email) {
+      errors.email = 'Email is required';
     }
+    if (!values.password) {
+      errors.password = 'Password is required';
+    }
+    return errors;
+  };
 
-  const resultAction = await dispatch(loginUser(formData));
+  const handleSubmit = async (values: typeof initialValues) => {
+    const resultAction = await dispatch(loginUser(values));
 
-if (loginUser.fulfilled.match(resultAction)) {
-  toast.success('Login successful');
+    if (loginUser.fulfilled.match(resultAction)) {
+      toast.success('Login successful');
 
-  const user = resultAction.payload;
+      const user = resultAction.payload;
 
-  if (user?.role === 'admin') {
-    navigate('/admin/dashboard');
-  } else if (user?.role === 'instructor') {
-    navigate('/instructor/dashboard');
-  } else {
-    navigate('/student/dashboard'); // default fallback
-  }
-} else {
-  toast.error(resultAction.payload as string);
-}
+      if (user?.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (user?.role === 'instructor') {
+        navigate('/instructor/dashboard');
+      } else {
+        navigate('/student/dashboard');
+      }
+    } else {
+      toast.error(resultAction.payload as string);
+    }
   };
 
   return (
@@ -47,39 +53,59 @@ if (loginUser.fulfilled.match(resultAction)) {
       <div className="flex items-center justify-center bg-white p-8">
         <div className="w-full max-w-md space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Hey yo, 👋</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Hello</h1>
             <h2 className="text-xl font-semibold text-gray-600">Welcome back!</h2>
             <p className="text-sm text-gray-500 mt-2">Login to Best LMS Platform</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="email"
-              name="email"
-              placeholder="Your email"
-              className="w-full border border-gray-300 rounded px-4 py-2"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="w-full border border-gray-300 rounded px-4 py-2"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <button
-              type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded transition"
-              disabled={loading}
-            >
-              {loading ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
+          <Formik
+            initialValues={initialValues}
+            validate={validate}
+            onSubmit={handleSubmit}
+          >
+            {() => (
+              <Form className="space-y-4">
+                <div>
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Your email"
+                    className="w-full border border-gray-300 rounded px-4 py-2"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    className="w-full border border-gray-300 rounded px-4 py-2"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded transition"
+                  disabled={loading}
+                >
+                  {loading ? 'Logging in...' : 'Login'}
+                </button>
+              </Form>
+            )}
+          </Formik>
 
           <div className="text-sm text-gray-500 flex justify-between items-center">
-            <span>I forgot my password 🥲</span>
+            <span>forgot my password</span>
             <Link to="/register" className="text-teal-600 hover:underline">
               Don't have an account?
             </Link>
